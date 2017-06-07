@@ -16,21 +16,21 @@ class PiCar(Block):
 
     def __init__(self):
         super().__init__()
-        motor_hat = Adafruit_MotorHAT(addr=0x60)
-        self._motor_left  = motor_hat.getMotor(1)
-        self._motor_right = motor_hat.getMotor(2)
+        self.MotorHAT = Adafruit_MotorHAT(addr=0x60)
+        self._motor_left  = self.MotorHAT.getMotor(1)
+        self._motor_right = self.MotorHAT.getMotor(2)
 
     def process_signals(self, signals):
         for signal in signals:
-            if (self.forward_speed() > 0):
-                self._motor_right(self.forward_speed())
-                self._motor_left(self.forward_speed())
+            if (self.forward_speed(signal) >= 0):
+                self._motor_right.run(Adafruit_MotorHAT.FORWARD)
+                self._motor_left.run(Adafruit_MotorHAT.FORWARD)
+                self._motor_right.setSpeed(self.forward_speed(signal))
+                self._motor_left.setSpeed(self.forward_speed(signal))
 
     def stop(self):
         try:
-            mh.getMotor(1).run(Adafruit_MotorHAT.RELEASE)
-            mh.getMotor(2).run(Adafruit_MotorHAT.RELEASE)
-            mh.getMotor(3).run(Adafruit_MotorHAT.RELEASE)
-            mh.getMotor(4).run(Adafruit_MotorHAT.RELEASE)
+            self.MotorHAT.getMotor(1).run(Adafruit_MotorHAT.RELEASE)
+            self.MotorHAT.getMotor(2).run(Adafruit_MotorHAT.RELEASE)
         except:
             self.logger.exception('Exception while halting motors')
