@@ -25,15 +25,15 @@ class PiCar(Block):
             if (self.forward_speed(signal) >= 0):
                 self._motor_right.run(Adafruit_MotorHAT.FORWARD)
                 self._motor_left.run(Adafruit_MotorHAT.FORWARD)
-                right_wheel_speed = min([max([0,self.forward_speed(signal) + self.right_speed(signal)]),255])
-                left_wheel_speed  = min([max([0,self.forward_speed(signal) + self.left_speed(signal)]),255])
+                right_wheel_speed = self.forward_speed(signal) + self.right_speed(signal)
+                left_wheel_speed  = self.forward_speed(signal) + self.left_speed(signal)
                 self._motor_right.setSpeed(right_wheel_speed)
                 self._motor_left.setSpeed(left_wheel_speed)
-            else (self.forward_speed(signal) < 0):
+            elif (self.forward_speed(signal) < 0):
                 self._motor_right.run(Adafruit_MotorHAT.BACKWARD)
                 self._motor_left.run(Adafruit_MotorHAT.BACKWARD)
-                right_wheel_speed = min([max([0,abs(self.forward_speed(signal) + self.right_speed(signal))]),255])
-                left_wheel_speed  = min([max([0,abs(self.forward_speed(signal) + self.left_speed(signal))]),255])
+                right_wheel_speed = abs(self.forward_speed(signal) + self.right_speed(signal))
+                left_wheel_speed  = abs(self.forward_speed(signal) + self.left_speed(signal))
                 self._motor_right.setSpeed(right_wheel_speed)
                 self._motor_left.setSpeed(left_wheel_speed)
 
