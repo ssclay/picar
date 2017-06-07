@@ -6,11 +6,11 @@ from Adafruit_MotorHAT import Adafruit_MotorHAT
 @discoverable
 class PiCar(Block):
 
-    forward_speed = IntProperty(title="Forward speed, 0-255",
+    forward_speed = IntProperty(title="Forward speed given to both motors, -255 - 255",
                                 default=0)
-    left_motor    = IntProperty(title="Rotation of left motor, 0-255",
+    right_speed   = IntProperty(title="Additional Rotation of right motor, -255 - 255",
                                 default=0)
-    right_motor   = IntProperty(title="Rotation of right motor, 0-255",
+    left_speed    = IntProperty(title="Additional Rotation of left motor, -255 - 255",
                                 default=0)
     version = VersionProperty('0.0.1')
 
@@ -25,8 +25,17 @@ class PiCar(Block):
             if (self.forward_speed(signal) >= 0):
                 self._motor_right.run(Adafruit_MotorHAT.FORWARD)
                 self._motor_left.run(Adafruit_MotorHAT.FORWARD)
-                self._motor_right.setSpeed(self.forward_speed(signal))
-                self._motor_left.setSpeed(self.forward_speed(signal))
+                right_wheel_speed = min([max([0,self.forward_speed(signal) + self.right_speed(signal)]),255])
+                left_wheel_speed  = min([max([0,self.forward_speed(signal) + self.left_speed(signal)]),255])
+                self._motor_right.setSpeed(right_wheel_speed)
+                self._motor_left.setSpeed(left_wheel_speed)
+            else (self.forward_speed(signal) < 0):
+                self._motor_right.run(Adafruit_MotorHAT.BACKWARD)
+                self._motor_left.run(Adafruit_MotorHAT.BACKWARD)
+                right_wheel_speed = min([max([0,abs(self.forward_speed(signal) + self.right_speed(signal))]),255])
+                left_wheel_speed  = min([max([0,abs(self.forward_speed(signal) + self.left_speed(signal))]),255])
+                self._motor_right.setSpeed(right_wheel_speed)
+                self._motor_left.setSpeed(left_wheel_speed)
 
     def stop(self):
         try:
