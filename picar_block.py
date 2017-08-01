@@ -38,6 +38,9 @@ class PiCar(Block):
                 self._motor_left.setSpeed(left_wheel_speed)
 
     def stop(self):
+        super().stop()
+        self._motor_left.setSpeed(0)
+        self._motor_right.setSpeed(0)
         try:
             self.MotorHAT.getMotor(1).run(Adafruit_MotorHAT.RELEASE)
             self.MotorHAT.getMotor(2).run(Adafruit_MotorHAT.RELEASE)
