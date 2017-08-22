@@ -1,3 +1,5 @@
+Adafruit picar block
+====================
 Drives 2 DC motors using the Adafruit Hat and a Raspberry Pi
 
 Properties
